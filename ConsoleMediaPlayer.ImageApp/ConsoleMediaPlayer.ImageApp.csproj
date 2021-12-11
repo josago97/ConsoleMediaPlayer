@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\ConsoleMediaPlayer.Common.csproj" />
+    <ProjectReference Include="..\ConsoleMediaPlayer.Common\ConsoleMediaPlayer.Common.csproj" />
   </ItemGroup>
 
 </Project>
