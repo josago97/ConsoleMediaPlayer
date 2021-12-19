@@ -1,5 +1,4 @@
 ﻿using ConsoleMediaPlayer.Common;
-using CSCore;
 using CSCore.Codecs.MP3;
 using CSCore.SoundOut;
 using FFMpegCore;
@@ -15,8 +14,8 @@ namespace ConsoleMediaPlayer.VideoApp
 {
     public class VideoPlayer : MediaPlayer
     {
-        private const int DEFAULT_HEIGHT = 300;
-        private const int FPS_LIMIT = 30;
+        private const int DEFAULT_HEIGHT = 250;
+        private const int FPS_LIMIT = 24;
         private static string ASCII_PIXEL_TABLE = @"█▓@8#x+o=:-. ";
 
         private ISoundOut _soundOut;
@@ -65,10 +64,10 @@ namespace ConsoleMediaPlayer.VideoApp
 
             while (true)
             {
-                PlaySound(audio);
-
                 Stopwatch timer = new Stopwatch();
                 long waitTicks = 0;
+
+                PlaySound(audio);
                 timer.Start();
 
                 for (int i = 0; i < Frames.Count; i++)
@@ -83,9 +82,9 @@ namespace ConsoleMediaPlayer.VideoApp
                     {
                         Thread.Sleep(TimeSpan.FromTicks(waitTicks));
                     }
-
-                    waitTicks -= timer.ElapsedTicks;
-                    timer.Restart();
+                    else
+                    {
+                    }
                 }
 
                 SpinWait.SpinUntil(() => _soundOut.PlaybackState != PlaybackState.Playing);
@@ -123,27 +122,18 @@ namespace ConsoleMediaPlayer.VideoApp
 
                 stream.Position = 0;
                 byte[] buffer = new byte[BytesPerFrame];
-                List<Task<string>> tasks = new List<Task<string>>();
                 Frames.Clear();
 
                 while (stream.Position < stream.Length)
                 {
-                    for (int i = 0; i < FPS && stream.Position < stream.Length; i++)
+                    int bytesReaded = stream.Read(buffer, 0, BytesPerFrame);
+
+                    using (MemoryStream auxStream = new MemoryStream(buffer, 0, bytesReaded))
                     {
-                        Bitmap frame;
-                        int bytesReaded = stream.Read(buffer, 0, BytesPerFrame);
-
-                        using (MemoryStream auxStream = new MemoryStream(buffer, 0, bytesReaded))
-                        {
-                            auxStream.Position = 0;
-                            frame = (Bitmap)Image.FromStream(auxStream);
-                        }
-
-                        tasks.Add(Task.Run(() => RenderFrame(frame)));
+                        auxStream.Position = 0;
+                        Bitmap frame = (Bitmap)Image.FromStream(auxStream);
+                        Frames.Add(RenderFrame(frame));
                     }
-
-                    Frames.AddRange(await Task.WhenAll(tasks.ToArray()));
-                    tasks.Clear();
                 }
             }
         }

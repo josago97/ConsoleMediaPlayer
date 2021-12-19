@@ -11,20 +11,20 @@ namespace ConsoleMediaPlayer.ImageApp
         private readonly static Dictionary<ConsoleColor, Color> CONSOLE_COLORS = new Dictionary<ConsoleColor, Color>()
         {
            { ConsoleColor.Black, Color.Black },
-           { ConsoleColor.DarkBlue, Color.DarkBlue },
-           { ConsoleColor.DarkGreen, Color.DarkGreen },
-           { ConsoleColor.DarkCyan, Color.DarkCyan },
-           { ConsoleColor.DarkRed, Color.DarkRed },
-           { ConsoleColor.DarkMagenta, Color.DarkMagenta },
-           { ConsoleColor.DarkYellow, Color.DarkGoldenrod },
-           { ConsoleColor.Gray, Color.Gray },
-           { ConsoleColor.DarkGray, Color.DarkGray },
-           { ConsoleColor.Blue, Color.Blue },
-           { ConsoleColor.Green, Color.Lime },
-           { ConsoleColor.Cyan, Color.Cyan },
+           { ConsoleColor.DarkBlue, Color.FromArgb(0, 55, 218) },
+           { ConsoleColor.DarkGreen, Color.FromArgb(19, 161, 14) },
+           { ConsoleColor.DarkCyan, Color.FromArgb(58, 150, 221) },
+           { ConsoleColor.DarkRed, Color.FromArgb(197, 15, 31) },
+           { ConsoleColor.DarkMagenta, Color.FromArgb(136, 23, 152) },
+           { ConsoleColor.DarkYellow, Color.FromArgb(193, 156, 0) },
+           { ConsoleColor.Gray, Color.FromArgb(204, 204, 204) },
+           { ConsoleColor.DarkGray, Color.FromArgb(118, 118, 118) },
+           { ConsoleColor.Blue, Color.FromArgb(59, 120, 255) },
+           { ConsoleColor.Green, Color.FromArgb(22, 198, 12) },
+           { ConsoleColor.Cyan, Color.FromArgb(97, 214, 214) },
            { ConsoleColor.Red, Color.Red },
-           { ConsoleColor.Magenta, Color.Magenta },
-           { ConsoleColor.Yellow, Color.Yellow },
+           { ConsoleColor.Magenta, Color.FromArgb(180, 0, 158) },
+           { ConsoleColor.Yellow, Color.FromArgb(234, 250, 2) },
            { ConsoleColor.White, Color.White }
         };
 
@@ -101,7 +101,7 @@ namespace ConsoleMediaPlayer.ImageApp
             return nearest;
         }
 
-        private double Distance(Color a, Color b)
+        /*private double Distance(Color a, Color b)
         {
             float aHue = a.GetHue();
             float bHue = b.GetHue();
@@ -116,6 +116,11 @@ namespace ConsoleMediaPlayer.ImageApp
             float bBrightness = b.GetBrightness();
 
             return Math.Abs((aHue - bHue) / 360f) + Math.Abs(aSaturation - bSaturation) + Math.Abs(aBrightness - bBrightness);
+        }*/
+
+        private double Distance(Color a, Color b)
+        {
+            return Math.Abs(a.R - b.R) + Math.Abs(a.G - b.G) + Math.Abs(a.B - b.B);
         }
     }
 }

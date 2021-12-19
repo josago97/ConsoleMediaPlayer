@@ -20,7 +20,7 @@ namespace ConsoleMediaPlayer.Common
         public void ResizeConsoleScreen()
         {
             ConsoleHelper.SetCurrentFont(FontSize);
-            Console.SetWindowSize(Resolution.Width, Resolution.Height + 2);
+            Console.SetWindowSize(Resolution.Width + 1, Resolution.Height + 2);
         }
 
         protected Size CalculateResolution(Size originalResolution, int desiredHeight)
