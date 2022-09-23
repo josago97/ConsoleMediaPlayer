@@ -10,7 +10,7 @@ namespace ConsoleMediaPlayer.Common
 
         public MediaPlayer(string filePath)
         {
-            if (!File.Exists(filePath)) throw new Exception($"El archivo {FilePath} no existe");
+            if (!File.Exists(filePath)) throw new Exception($"El archivo {filePath} no existe");
 
             FilePath = filePath;
         }
