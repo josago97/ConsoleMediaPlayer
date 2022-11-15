@@ -16,7 +16,7 @@ namespace ConsoleMediaPlayer.VideoApp
     {
         private const int DEFAULT_HEIGHT = 250;
         private const int FPS_LIMIT = 24;
-        private static string ASCII_PIXEL_TABLE = @"█▓@8#x+o=:-. ";
+        private const string ASCII_PIXEL_TABLE = @"█▓@8#x+o=:-. ";
 
         private ISoundOut _soundOut;
 
@@ -48,7 +48,7 @@ namespace ConsoleMediaPlayer.VideoApp
         private int CalculateBytesPerFrame(int width, int height)
         {
             int lineSizeWithoutPadding = width * 3;
-            int lineSizeWithPadding = (int)Math.Ceiling(lineSizeWithoutPadding / 4f) * 4;
+            int lineSizeWithPadding = (int)Math.Ceiling(lineSizeWithoutPadding / 4.0) * 4;
             return 54 + lineSizeWithPadding * height;
         }
 
@@ -82,9 +82,6 @@ namespace ConsoleMediaPlayer.VideoApp
                     {
                         Thread.Sleep(TimeSpan.FromTicks(waitTicks));
                     }
-                    else
-                    {
-                    }
                 }
 
                 SpinWait.SpinUntil(() => _soundOut.PlaybackState != PlaybackState.Playing);
@@ -108,33 +105,31 @@ namespace ConsoleMediaPlayer.VideoApp
 
         public async void ExtractFramesAsync()
         {
-            using (var stream = new MemoryTributary())
+            using Stream stream = new MemoryTributary();
+
+            await FFMpegArguments
+                .FromFileInput(FilePath)
+                .OutputToPipe(new StreamPipeSink(stream), options => options
+                    .ForceFormat("rawvideo")
+                    .WithFramerate(FPS)
+                    .WithVideoCodec("bmp")
+                    .WithCustomArgument("-ss 00:00")
+                    .Resize(Resolution.Width, Resolution.Height)
+                ).ProcessAsynchronously();
+
+            stream.Position = 0;
+            byte[] buffer = new byte[BytesPerFrame];
+            Frames.Clear();
+
+            while (stream.Position < stream.Length)
             {
-                await FFMpegArguments
-                    .FromFileInput(FilePath)
-                    .OutputToPipe(new StreamPipeSink(stream), options => options
-                        .ForceFormat("rawvideo")
-                        .WithFramerate(FPS)
-                        .WithVideoCodec("bmp")
-                        .WithCustomArgument("-ss 00:00")
-                        .Resize(Resolution.Width, Resolution.Height)
-                    ).ProcessAsynchronously();
+                int bytesReaded = stream.Read(buffer, 0, BytesPerFrame);
 
-                stream.Position = 0;
-                byte[] buffer = new byte[BytesPerFrame];
-                Frames.Clear();
+                using MemoryStream auxStream = new MemoryStream(buffer, 0, bytesReaded);
 
-                while (stream.Position < stream.Length)
-                {
-                    int bytesReaded = stream.Read(buffer, 0, BytesPerFrame);
-
-                    using (MemoryStream auxStream = new MemoryStream(buffer, 0, bytesReaded))
-                    {
-                        auxStream.Position = 0;
-                        Bitmap frame = (Bitmap)Image.FromStream(auxStream);
-                        Frames.Add(RenderFrame(frame));
-                    }
-                }
+                auxStream.Position = 0;
+                Bitmap frame = (Bitmap)Image.FromStream(auxStream);
+                Frames.Add(RenderFrame(frame));
             }
         }
 

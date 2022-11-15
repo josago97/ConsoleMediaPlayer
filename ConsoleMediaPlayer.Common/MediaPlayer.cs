@@ -14,13 +14,13 @@ namespace ConsoleMediaPlayer.Common
             if (!File.Exists(filePath)) throw new Exception($"El archivo {filePath} no existe");
 
             FilePath = filePath;
+            ConsoleHelper.SetCurrentFont(FontSize);
         }
 
         public abstract void Play();
 
         public void ResizeConsoleScreen()
         {
-            ConsoleHelper.SetCurrentFont(FontSize);
             int width = Resolution.Width + MARGIN.Width;
             int height = Resolution.Height + MARGIN.Height;
             Console.SetWindowSize(width, height);

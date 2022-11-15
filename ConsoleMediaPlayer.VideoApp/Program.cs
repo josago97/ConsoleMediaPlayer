@@ -4,6 +4,9 @@
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine(Console.LargestWindowHeight);
+            Console.WriteLine(Console.LargestWindowWidth);
+
             Console.WriteLine("Introduce ruta de un vídeo:");
             string filePath = Console.ReadLine().Replace("\"", "");
 
