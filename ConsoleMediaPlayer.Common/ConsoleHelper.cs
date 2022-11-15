@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace ConsoleMediaPlayer.Common
 {
@@ -63,9 +58,9 @@ namespace ConsoleMediaPlayer.Common
                 // Get some settings from current font.
                 if (!SetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref set))
                 {
-                    var ex = Marshal.GetLastWin32Error();
-                    Console.WriteLine("Set error " + ex);
-                    throw new System.ComponentModel.Win32Exception(ex);
+                    int error = Marshal.GetLastWin32Error();
+                    Console.WriteLine("Set error " + error);
+                    throw new System.ComponentModel.Win32Exception(error);
                 }
 
                 FontInfo after = new FontInfo
@@ -78,9 +73,9 @@ namespace ConsoleMediaPlayer.Common
             }
             else
             {
-                var er = Marshal.GetLastWin32Error();
-                Console.WriteLine("Get error " + er);
-                throw new System.ComponentModel.Win32Exception(er);
+                int error = Marshal.GetLastWin32Error();
+                Console.WriteLine("Get error " + error);
+                throw new System.ComponentModel.Win32Exception(error);
             }
         }
     }

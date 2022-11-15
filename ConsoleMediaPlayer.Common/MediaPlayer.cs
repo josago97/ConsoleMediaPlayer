@@ -4,6 +4,7 @@ namespace ConsoleMediaPlayer.Common
 {
     public abstract class MediaPlayer
     {
+        static readonly Size MARGIN = new Size(1, 2);
         protected abstract short FontSize { get; }
         public string FilePath { get; init; }
         public Size Resolution { get; protected set; }
@@ -20,16 +21,19 @@ namespace ConsoleMediaPlayer.Common
         public void ResizeConsoleScreen()
         {
             ConsoleHelper.SetCurrentFont(FontSize);
-            Console.SetWindowSize(Resolution.Width + 1, Resolution.Height + 2);
+            int width = Resolution.Width + MARGIN.Width;
+            int height = Resolution.Height + MARGIN.Height;
+            Console.SetWindowSize(width, height);
         }
 
         protected Size CalculateResolution(Size originalResolution, int desiredHeight)
         {
             double aspectRatio = originalResolution.Width / (double)originalResolution.Height;
-            int width = (int)(desiredHeight * aspectRatio);
-            int height = desiredHeight / 2;
+            int maxWindowHeight = Console.LargestWindowHeight - MARGIN.Height;
+            int height = Math.Min(maxWindowHeight * 2, desiredHeight);
+            int width = (int)(height * aspectRatio);
 
-            return new Size(width, height);
+            return new Size(width, height / 2);
         }
 
     }
