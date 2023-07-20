@@ -34,7 +34,7 @@ jobs:
           fullPath=${releaseFolder}/${project}
           dotnet publish $project/$project.csproj -c Release -o $fullPath --nologo --self-contained true /p:PublishSingleFile=true /p:DebugType=None /p:DebugSymbols=false
           cd $fullPath
-          zip -r ../${folder}.zip *
+          zip -r ../${project}.zip *
           cd ../..
         done
 
