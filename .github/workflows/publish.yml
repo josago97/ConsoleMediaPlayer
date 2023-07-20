@@ -38,9 +38,10 @@ jobs:
           cd ../..
         done
 
-    - name: Publish artifacts
-      uses: actions/upload-artifact@v3.1.2
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
       with:
-        path: ${{ env.RELEASE_FOLDER }}/**/*.zip
+        file_glob: true
+        file: ${{ env.RELEASE_FOLDER }}/**/*.zip
         
         
