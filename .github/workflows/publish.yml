@@ -39,7 +39,7 @@ jobs:
         done
 
     - name: Publish artifacts
-      uses: actions/upload-artifact@vv3.1.2
+      uses: actions/upload-artifact@v3.1.2
       with:
         path: ${RELEASE_FOLDER}/*.zip
         
