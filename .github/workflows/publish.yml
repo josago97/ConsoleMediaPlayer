@@ -32,7 +32,7 @@ jobs:
         for (( i=0; i<${#projects[@]}; i++ )); do
           project=${projects[i]}
           fullPath=${releaseFolder}/${project}
-          dotnet publish $project/$project.csproj -r -c Release -o $fullPath --nologo --self-contained true /p:PublishSingleFile=true /p:DebugType=None /p:DebugSymbols=false
+          dotnet publish $project/$project.csproj -c Release -o $fullPath --nologo --self-contained true /p:PublishSingleFile=true /p:DebugType=None /p:DebugSymbols=false
           cd $fullPath
           zip -r ../${folder}.zip *
           cd ../..
