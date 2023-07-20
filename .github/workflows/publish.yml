@@ -1,0 +1,46 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Publish
+
+# Declaring custom variables
+env:
+  PROJECT_NAMES: ConsoleMediaPlayer.ImageApp ConsoleMediaPlayer.VideoApp
+  RELEASE_FOLDER: release
+  REPO_NAME: ${{ github.event.repository.name }}
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+   # use ubuntu-latest image to run steps on
+    runs-on: ubuntu-latest
+
+    steps:
+    # uses GitHub's checkout action to checkout code form the master branch
+    - uses: actions/checkout@v3
+    
+     # Build project to the release-folder
+    - name: Build .NET Project
+      run: |
+        IFS=' ' read -ra projects <<< "${{ env.PROJECT_NAMES }}"
+        releaseFolder=${{env.RELEASE_FOLDER}}
+        for (( i=0; i<${#projects[@]}; i++ )); do
+          project=${projects[i]}
+          fullPath=${releaseFolder}/${project}
+          dotnet publish $project/$project.csproj -r -c Release -o $fullPath --nologo --self-contained true /p:PublishSingleFile=true /p:DebugType=None /p:DebugSymbols=false
+          cd $fullPath
+          zip -r ../${folder}.zip *
+          cd ../..
+        done
+
+    - name: Publish artifacts
+      uses: actions/upload-artifact@vv3.1.2
+      with:
+        path: ${RELEASE_FOLDER}/*.zip
+        
+        
