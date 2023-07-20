@@ -42,7 +42,7 @@ jobs:
       id: previoustag
       uses: oprypin/find-latest-tag@v1
       with:
-        repository: ${{ github.repositoryUrl }}
+        repository: ${{ github.repository }}
         releases-only: true 
 
     - name: Upload binaries to release
