@@ -40,16 +40,17 @@ jobs:
 
     - name: 'Get lastest tag'
       id: previoustag
-      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      uses: oprypin/find-latest-tag@v1
       with:
-        fallback: 1.0.0
+        repository: ${{ github.repositoryUrl }}
+        releases-only: true 
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         tag: ${{ steps.previoustag.outputs.tag }}
-        overwrite: true
-        file_glob: true
+        overwrite: true 
+        file_glob: true 
         file: ${{ env.RELEASE_FOLDER }}/**/*.zip
         
         
