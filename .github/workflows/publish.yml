@@ -41,6 +41,8 @@ jobs:
     - name: 'Get lastest tag'
       id: previoustag
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 1.0.0
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
